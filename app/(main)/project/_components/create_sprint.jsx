@@ -49,16 +49,24 @@ export default function SprintCreationForm({
     },
   });
 
-  const onSubmit = async (data) => {
-    await createSprintFn(projectId, {
-      ...data,
-      startDate: dateRange.from,
-      endDate: dateRange.to,
-    });
-    setShowForm(false);
-    router.refresh(); // Refresh the page to show updated data
-  };
+ const [recentSprint, setRecentSprint] = useState(null);
 
+// Update recentSprint after creating a sprint
+const onSubmit = async (data) => {
+  const sprint = await createSprintFn(projectId, {
+    ...data,
+    startDate: dateRange.from,
+    endDate: dateRange.to,
+  });
+  setRecentSprint({
+    name: data.name,
+    startDate: dateRange.from,
+    endDate: dateRange.to,
+  });
+  setShowForm(false);
+  toast.success('Sprint created successfully!');
+  router.push(`/project/${projectId}`);
+};
   return (
     <>
       <div className="flex justify-between">
@@ -107,49 +115,52 @@ export default function SprintCreationForm({
                   control={control}
                   name="dateRange"
                   render={({ field }) => (
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant="outline"
-                          className={`w-full justify-start text-left font-normal bg-slate-950 ${
-                            !dateRange && "text-muted-foreground"
-                          }`}
-                        >
-                          <CalendarIcon className="mr-2 h-4 w-4" />
-                          {dateRange.from && dateRange.to ? (
-                            format(dateRange.from, "LLL dd, y") +
-                            " - " +
-                            format(dateRange.to, "LLL dd, y")
-                          ) : (
-                            <span>Pick a date</span>
-                          )}
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent
-                        className="w-auto bg-slate-900"
-                        align="start"
-                      >
-                        <DayPicker
-                          classNames={{
-                            chevron: "fill-blue-500",
-                            range_start: "bg-blue-700",
-                            range_end: "bg-blue-700",
-                            range_middle: "bg-blue-400",
-                            day_button: "border-none",
-                            today: "border-2 border-blue-700",
-                          }}
-                          mode="range"
-                          disabled={[{ before: new Date() }]}
-                          selected={dateRange}
-                          onSelect={(range) => {
-                            if (range?.from && range?.to) {
-                              setDateRange(range);
-                              field.onChange(range);
-                            }
-                          }}
-                        />
-                      </PopoverContent>
-                    </Popover>
+                   <Popover>
+  <PopoverTrigger asChild>
+    <Button
+      variant="outline"
+      className={`w-full justify-start text-left font-normal bg-slate-950 ${
+        !dateRange && "text-muted-foreground"
+      }`}
+    >
+      <CalendarIcon className="mr-2 h-4 w-4" />
+      {dateRange.from && dateRange.to ? (
+        format(dateRange.from, "LLL dd, y") +
+        " - " +
+        format(dateRange.to, "LLL dd, y")
+      ) : (
+        <span>Pick a date</span>
+      )}
+    </Button>
+  </PopoverTrigger>
+  <PopoverContent className="w-auto bg-slate-900" align="start">
+    {recentSprint && (
+      <div className="mb-2 text-xs text-blue-400">
+        Recent Sprint: <b>{recentSprint.name}</b><br />
+        {format(recentSprint.startDate, "LLL dd, y")} - {format(recentSprint.endDate, "LLL dd, y")}
+      </div>
+    )}
+    <DayPicker
+      classNames={{
+        chevron: "fill-blue-500",
+        range_start: "bg-blue-700",
+        range_end: "bg-blue-700",
+        range_middle: "bg-blue-400",
+        day_button: "border-none",
+        today: "border-2 border-blue-700",
+      }}
+      mode="range"
+      disabled={[{ before: new Date() }]}
+      selected={dateRange}
+      onSelect={(range) => {
+        if (range?.from && range?.to) {
+          setDateRange(range);
+          field.onChange(range);
+        }
+      }}
+    />
+  </PopoverContent>
+</Popover>
                   )}
                 />
               </div>

@@ -45,3 +45,43 @@ export async function getOrganization(orgId) {
     throw error;
   }
 }
+
+
+export async function getOrganizationUsers(orgId) {
+   const { userId } = await auth();
+  if (!userId) {
+    throw new Error("Unauthorized");
+  }
+
+  const user = await prisma.user.findUnique({
+    where: { clerkUserId: userId },
+  });
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+ const organization = await clerkClient.organizations.getOrganization({ organizationId: orgId });
+
+    if (!organization) {
+      return null;
+    }
+    
+
+    const organizationMemberships= await clerkClient.organizations.getOrganizationMembershipList({
+      organizationId: organization.id,
+    });
+  
+    const userIds=organizationMemberships.data.map(
+      (membership)=>membership.publicUserData.userId
+    )
+
+    const users=await prisma.user.findMany({
+      where:{
+        clerkUserId:{
+          in:userIds,
+        }
+      }
+    })
+    return users;
+}

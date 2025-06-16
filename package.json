@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-   "build": "npx prisma generate && next build",
+    "build": "npx prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
     "postinstall": "prisma generate"
@@ -13,6 +13,7 @@
     "@clerk/backend": "^2.0.0",
     "@clerk/nextjs": "^6.21.0",
     "@clerk/themes": "^2.2.49",
+    "@hello-pangea/dnd": "^18.0.1",
     "@hookform/resolvers": "^5.1.0",
     "@prisma/client": "^6.9.0",
     "@radix-ui/react-accordion": "^1.2.11",
@@ -22,6 +23,7 @@
     "@radix-ui/react-select": "^2.2.5",
     "@radix-ui/react-slot": "^1.2.3",
     "@radix-ui/react-tabs": "^1.1.12",
+    "@uiw/react-md-editor": "^4.0.7",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",

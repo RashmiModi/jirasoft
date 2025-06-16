@@ -143,3 +143,10 @@
   background-size: 30px 30px;
   color:white;
 }
+
+
+.wmde-markdown ul{
+  list-style-type: disc;
+  padding-left: 15px !important;
+  color: white;
+}

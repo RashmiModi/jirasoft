@@ -25,7 +25,7 @@ const ProjectPage = async({params}) => {
 {project.sprints.length>0?(
 <SprintBoard
 sprints={project.sprints}
-projectId={projectId}
+projectId={project.id}
 orgId={project.organizationId}
 />
 ):(

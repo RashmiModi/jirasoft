@@ -1,10 +1,8 @@
 import { useState } from "react";
-// ✅ Updated import: useActionState replaces deprecated useFormState
-import { useActionState } from "react";
 import { toast } from "sonner";
 
 const useFetch = (cb) => {
-  const [data, setData] = useActionState(cb, undefined);
+  const [data, setData] = useState(undefined);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
